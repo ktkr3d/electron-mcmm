@@ -52,6 +52,7 @@ window.api.DisplayMyModsList((mods_list) => {
       '</td><td></td><td>Installed</td></tr>';
   }
   replaceHTML('table-m-tbody', my_mods_list_html);
+  $('#table-m').trigger('update');
 });
 
 window.api.DisplayMyShaderpacksList((list) => {
@@ -60,6 +61,7 @@ window.api.DisplayMyShaderpacksList((list) => {
     list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
   }
   replaceHTML('table-s-tbody', list_html);
+  $('#table-s').trigger('update');
 });
 
 window.api.DisplayMyResourcepacksList((list) => {
@@ -68,6 +70,7 @@ window.api.DisplayMyResourcepacksList((list) => {
     list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
   }
   replaceHTML('table-r-tbody', list_html);
+  $('#table-r').trigger('update');
 });
 
 window.api.DisplaySearchResults((list) => {
@@ -95,4 +98,5 @@ window.api.DisplaySearchResults((list) => {
       '</td></tr>';
   }
   replaceHTML('table-c-tbody', list_html);
+  $('#table-c').trigger('update');
 });
