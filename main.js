@@ -66,7 +66,7 @@ function createWindow() {
   mwnd = mainWindow;
 
   // and load the index.html of the app.
-  //mainWindow.menuBarVisible = false;
+  mainWindow.menuBarVisible = false;
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
@@ -114,7 +114,12 @@ ipcMain.on('ipc-refresh-my-m-list', (event, arg) => {
       console.log(latest);
     });
     */
-    m_list_array.push({ id: jsonObject.id, url: jsonObject.contact.homepage, name: jsonObject.name, version: jsonObject.version });
+    m_list_array.push({
+      id: jsonObject.id,
+      url: jsonObject.contact.homepage,
+      name: jsonObject.name,
+      version: jsonObject.version,
+    });
   }
   console.log(m_list_array);
   //event.reply('ipc-display-my-m-list', mods_files);
