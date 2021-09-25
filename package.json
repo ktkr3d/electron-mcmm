@@ -1,0 +1,23 @@
+{
+  "name": "electron-mcmm",
+  "version": "1.0.0",
+  "description": "Electron Minecraft Mods Manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/ktkr3d/electron-mcmm",
+  "keywords": [
+    "Electron",
+    "Minecraft"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^15.0.0"
+  },
+  "dependencies": {
+    "mc-curseforge-api": "^2.2.3",
+    "zip": "^1.2.0"
+  }
+}
