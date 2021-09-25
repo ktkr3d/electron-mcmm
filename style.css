@@ -1,3 +1,4 @@
+/*--- tab ---*/
 .tab-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -57,63 +58,6 @@
 
 .tab-switch {
   display: none;
-}
-
-/*--- table css ---*/
-.sorttbl {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  display: table;
-}
-.sorttbl tr {
-  display: table-row;
-  vertical-align: inherit;
-  border-color: inherit;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.sorttbl th:first-child,
-.sorttbl td:first-child {
-  padding-left: 16px;
-}
-
-.sorttbl td,
-.sorttbl th {
-  padding: 8px 8px;
-  display: table-cell;
-  text-align: left;
-  vertical-align: top;
-}
-
-.sorttbl th {
-  color: #fff !important;
-  background-color: #616161 !important;
-}
-
-/*--- list css ---*/
-
-.sort-btn {
-  border: none;
-  display: inline-block;
-  padding: 8px 16px;
-  vertical-align: middle;
-  overflow: hidden;
-  text-decoration: none;
-  color: #ffffff;
-  background-color: #4caf50;
-  text-align: center;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-ul.sortlist {
-  list-style-type: none;
-}
-ul.sortlist li {
-  padding: 7px;
-  border-bottom: dotted 1px #454545;
 }
 
 /*--- custom ---*/

@@ -43,7 +43,7 @@ window.api.DisplayMyModsList((mods_list) => {
   var my_mods_list_html = '';
   for (const elem of mods_list) {
     my_mods_list_html +=
-      '<tr class="item"><td><a href="' +
+      '<tr><td><a href="' +
       elem.url +
       '" target="_blank">' +
       elem.name +
@@ -51,23 +51,23 @@ window.api.DisplayMyModsList((mods_list) => {
       elem.version +
       '</td><td></td><td>Installed</td></tr>';
   }
-  replaceHTML('my-m-table-tbody', my_mods_list_html);
+  replaceHTML('table-m-tbody', my_mods_list_html);
 });
 
 window.api.DisplayMyShaderpacksList((list) => {
   var list_html = '';
   for (const elem of list) {
-    list_html += '<tr class="item"><td>' + elem + '</td><td></td><td></td><td></td></tr>';
+    list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
   }
-  replaceHTML('my-s-table-tbody', list_html);
+  replaceHTML('table-s-tbody', list_html);
 });
 
 window.api.DisplayMyResourcepacksList((list) => {
   var list_html = '';
   for (const elem of list) {
-    list_html += '<tr class="item"><td>' + elem + '</td><td></td><td></td><td></td></tr>';
+    list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
   }
-  replaceHTML('my-r-table-tbody', list_html);
+  replaceHTML('table-r-tbody', list_html);
 });
 
 window.api.DisplaySearchResults((list) => {
@@ -76,7 +76,7 @@ window.api.DisplaySearchResults((list) => {
     const ts = Date.parse(elem.updated);
     const dt = new Date(ts);
     list_html +=
-      '<tr class="item"><td><a href="' +
+      '<tr><td><a href="' +
       elem.url +
       '" target="_blank">' +
       elem.name +
@@ -94,5 +94,5 @@ window.api.DisplaySearchResults((list) => {
       'Install' +
       '</td></tr>';
   }
-  replaceHTML('my-c-table-tbody', list_html);
+  replaceHTML('table-c-tbody', list_html);
 });

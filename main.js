@@ -66,7 +66,7 @@ function createWindow() {
   mwnd = mainWindow;
 
   // and load the index.html of the app.
-  mainWindow.menuBarVisible = false;
+  //mainWindow.menuBarVisible = false;
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.

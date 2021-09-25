@@ -7,51 +7,54 @@
 -->
 <title></title>
 <link rel="stylesheet" href="./style.css">
-<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-add-css="false"></script>
-<link href="https://use.fontawesome.com/releases/v5.15.4/css/svg-with-js.css" rel="stylesheet" />
-<script src="https://www.w3schools.com/lib/w3.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
+<script type="text/javascript" src="tablesorter.js"></script>
 </head>
 <body>
 <div class="tab-wrap">
 
 <input id="tab-01" type="radio" name="tab" class="tab-switch" checked="checked" /><label class="tab-label" for="tab-01">My Mods</label>
 <div class="tab-content">
-<table class="sorttbl" id="my-m-table">
+<table id="table-m" class="tablesorter">
+<thead>
 <tr>
-<th onclick="w3.sortHTML('#my-m-table','.item', 'td:nth-child(1)')">Mod <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-m-table','.item', 'td:nth-child(2)')">Local <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-m-table','.item', 'td:nth-child(3)')">Latest <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-m-table','.item', 'td:nth-child(4)')">Status <i class="fa fa-sort"></i></th>
+<th>Mod</th>
+<th>Local</th>
+<th>Latest</th>
+<th>Status</th>
 </tr>
-<tbody id="my-m-table-tbody">
+</thead>
+<tbody id="table-m-tbody">
 </tbody>
 </table>
 </div>
 
 <input id="tab-02" type="radio" name="tab" class="tab-switch" /><label class="tab-label" for="tab-02">My Shaderpacks</label>
 <div class="tab-content">
-<table class="sorttbl" id="my-s-table">
-<tr>
-<th onclick="w3.sortHTML('#my-s-table','.item', 'td:nth-child(1)')">Shaderpack <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-s-table','.item', 'td:nth-child(2)')">Local <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-s-table','.item', 'td:nth-child(3)')">Latest <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-s-table','.item', 'td:nth-child(4)')">Status <i class="fa fa-sort"></i></th>
-</tr>
-<tbody id="my-s-table-tbody">
+<table id="table-s" class="tablesorter">
+<thead>
+<th>Shaderpack</th>
+<th>Local</th>
+<th>Latest</th>
+<th>Status</th>
+</thead>
+<tbody id="table-s-tbody">
 </tbody>
 </table>
 </div>
 
 <input id="tab-03" type="radio" name="tab" class="tab-switch" /><label class="tab-label" for="tab-03">My Resourcepacks</label>
 <div class="tab-content">
-<table class="sorttbl" id="my-r-table">
-<tr>
-<th onclick="w3.sortHTML('#my-r-table','.item', 'td:nth-child(1)')">Resourcepack <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-r-table','.item', 'td:nth-child(2)')">Local <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-r-table','.item', 'td:nth-child(3)')">Latest <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-r-table','.item', 'td:nth-child(4)')">Status <i class="fa fa-sort"></i></th>
-</tr>
-<tbody id="my-r-table-tbody">
+<table id="table-r" class="tablesorter">
+<thead>
+<th>Resourcepack</th>
+<th>Local</th>
+<th>Latest</th>
+<th>Status</th>
+</thead>
+<tbody id="table-r-tbody">
 </tbody>
 </table>
 </div>
@@ -75,15 +78,15 @@
   </select>
 </div>
 
-<table class="sorttbl" id="my-c-table">
-<tr>
-<th onclick="w3.sortHTML('#my-c-table','.item', 'td:nth-child(1)')">Mod <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-c-table','.item', 'td:nth-child(2)')">Description <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-c-table','.item', 'td:nth-child(3)')">Downloads <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-c-table','.item', 'td:nth-child(4)')">Date <i class="fa fa-sort"></i></th>
-<th onclick="w3.sortHTML('#my-c-table','.item', 'td:nth-child(4)')">Status <i class="fa fa-sort"></i></th>
-</tr>
-<tbody id="my-c-table-tbody">
+<table id="table-c" class="tablesorter">
+<thead>
+<th>Mod</th>
+<th>Description</th>
+<th>Downloads</th>
+<th>Date</th>
+<th>Status</th>
+</thead>
+<tbody id="table-c-tbody">
 </tbody>
 </table>
 </div>
@@ -96,6 +99,5 @@ Settings...
 </div>
 
 <script src="./renderer.js"></script>
-
 </body>
 </html>
