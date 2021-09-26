@@ -1,45 +1,51 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const curseforge = require('mc-curseforge-api');
 const { config } = require('process');
-const { ipcMain } = require('electron');
-var zip = require('zip');
+const zip = require('zip');
+const { homedir } = require('os');
+var mwnd;
 
-// Local Information
-const mc_dir = path.join(process.env.APPDATA, '/.minecraft');
-const mods_dir = path.join(mc_dir, '/mods');
-const shaderpacks_dir = path.join(mc_dir, '/shaderpacks');
-const resourcepacks_dir = path.join(mc_dir, '/resourcepacks');
+// Local Path Information
+const mc_dir = path.join(
+  process.platform === 'win32' ? process.env.APPDATA : homedir(),
+  '/.minecraft'
+);
+console.log(homedir);
+const m_dir = path.join(mc_dir, '/mods');
+const s_dir = path.join(mc_dir, '/shaderpacks');
+const r_dir = path.join(mc_dir, '/resourcepacks');
 
-const mods_files = fs
-  .readdirSync(mods_dir, { withFileTypes: true })
+// Create Mods File List
+const m_files = fs
+  .readdirSync(m_dir, { withFileTypes: true })
   .filter((dirent) => dirent.isFile())
   .map(({ name }) => name)
   .filter(function (file) {
     return path.extname(file).toLowerCase() === '.jar';
   });
-console.log(mods_files);
+console.log(m_files);
 
-const shaderpacks_files = fs
-  .readdirSync(shaderpacks_dir, { withFileTypes: true })
+// Create Shaderpacks File List
+const s_files = fs
+  .readdirSync(s_dir, { withFileTypes: true })
   .filter((dirent) => dirent.isFile())
   .map(({ name }) => name)
   .filter(function (file) {
     return path.extname(file).toLowerCase() === '.zip';
   });
-console.log(shaderpacks_files);
+console.log(s_files);
 
-const resourcepacks_files = fs
-  .readdirSync(resourcepacks_dir, { withFileTypes: true })
+// Create Resourcepacks File List
+const r_files = fs
+  .readdirSync(r_dir, { withFileTypes: true })
   .map(({ name }) => name)
   .filter(function (file) {
     return file;
   });
-console.log(resourcepacks_files);
-
-var mwnd;
+console.log(r_files);
 
 function createWindow() {
   // Create the browser window.
@@ -85,16 +91,18 @@ app.on('window-all-closed', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-// Mods
+// IPC: Return Mods List
 ipcMain.on('ipc-refresh-m-list', (event, arg) => {
   const m_list_array = [];
-  for (const elm of mods_files) {
-    console.log(path.join(mods_dir, elm));
-    var data = fs.readFileSync(path.join(mods_dir, elm)),
+  for (const elm of m_files) {
+    console.log(path.join(m_dir, elm));
+    var data = fs.readFileSync(path.join(m_dir, elm)),
       reader = zip.Reader(data);
     var key,
-      files = reader.toObject('utf8');
-    const jsonObject = JSON.parse(files['fabric.mod.json'], 'utf8');
+      files_in_jar = reader.toObject('utf8');
+
+    // Fabric Mod Information
+    const jsonObject = JSON.parse(files_in_jar['fabric.mod.json'], 'utf8');
     /*
     curseforge.getMod(jsonObject.id).then((latest) => {
       console.log(latest);
@@ -111,17 +119,17 @@ ipcMain.on('ipc-refresh-m-list', (event, arg) => {
   event.reply('ipc-display-m-list', m_list_array);
 });
 
-// Shaderpacks
+// IPC: Return Shaderpacks List
 ipcMain.on('ipc-refresh-s-list', (event, arg) => {
-  event.reply('ipc-display-s-list', shaderpacks_files);
+  event.reply('ipc-display-s-list', s_files);
 });
 
-// Resourcepacks
+// IPC: Return Resourcepacks List
 ipcMain.on('ipc-refresh-r-list', (event, arg) => {
-  event.reply('ipc-display-r-list', resourcepacks_files);
+  event.reply('ipc-display-r-list', r_files);
 });
 
-// Search
+// IPC: Return Catalog Search Results and Display
 ipcMain.handle('ipc-search-mods', async (event, data) => {
   console.log(data);
   const result = await curseforge.getMods({ searchFilter: data });
