@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('ipc-display-r-list', (event, arg) => list(arg));
   },
 
-  // Search
+  // Catalog Search
   SearchMods: async (arg) => await ipcRenderer.invoke('ipc-search-mods', arg),
   DisplaySearchResults: (list) => {
     ipcRenderer.on('ipc-display-search-results', (event, arg) => list(arg));
