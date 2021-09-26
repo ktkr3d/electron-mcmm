@@ -66,6 +66,11 @@ function createWindow() {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
+
+  mainWindow.webContents.on('new-window', function (e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
+  });
 }
 
 // This method will be called when Electron has finished

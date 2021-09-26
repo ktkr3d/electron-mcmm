@@ -34,7 +34,7 @@ window.api.DisplayMyModsList((mods_list) => {
     my_mods_list_html +=
       '<tr><td><a href="' +
       elem.url +
-      '" target="_blank">' +
+      '">' +
       elem.name +
       '</a></td><td>' +
       elem.version +
@@ -70,7 +70,7 @@ window.api.DisplaySearchResults((list) => {
     list_html +=
       '<tr><td><a href="' +
       elem.url +
-      '" target="_blank">' +
+      '">' +
       elem.name +
       '</a></td><td>' +
       elem.summary +
