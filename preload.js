@@ -5,29 +5,26 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
   // Mods
-  RefreshMyModsList: () => ipcRenderer.send('ipc-refresh-my-m-list'),
+  RefreshMyModsList: () => ipcRenderer.send('ipc-refresh-m-list'),
   DisplayMyModsList: (list) => {
-    ipcRenderer.on('ipc-display-my-m-list', (event, arg) => list(arg));
+    ipcRenderer.on('ipc-display-m-list', (event, arg) => list(arg));
   },
 
   // Shaderpacks
-  RefreshMyShaderpacksList: () => ipcRenderer.send('ipc-refresh-my-s-list'),
+  RefreshMyShaderpacksList: () => ipcRenderer.send('ipc-refresh-s-list'),
   DisplayMyShaderpacksList: (list) => {
-    ipcRenderer.on('ipc-display-my-s-list', (event, arg) => list(arg));
+    ipcRenderer.on('ipc-display-s-list', (event, arg) => list(arg));
   },
 
   // Resourcepacks
-  RefreshMyResourcepacksList: () => ipcRenderer.send('ipc-refresh-my-r-list'),
+  RefreshMyResourcepacksList: () => ipcRenderer.send('ipc-refresh-r-list'),
   DisplayMyResourcepacksList: (list) => {
-    ipcRenderer.on('ipc-display-my-r-list', (event, arg) => list(arg));
+    ipcRenderer.on('ipc-display-r-list', (event, arg) => list(arg));
   },
 
   // Search
-  SearchMods: (arg) => ipcRenderer.send('ipc-search-mods', arg),
+  SearchMods: async (arg) => await ipcRenderer.invoke('ipc-search-mods', arg),
   DisplaySearchResults: (list) => {
     ipcRenderer.on('ipc-display-search-results', (event, arg) => list(arg));
   },
-
-  // Find (invoke)
-  FindMods: async (arg) => await ipcRenderer.invoke('ipc-find-mods', arg),
 });

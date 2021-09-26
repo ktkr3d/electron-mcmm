@@ -7,18 +7,7 @@ const { config } = require('process');
 const { ipcMain } = require('electron');
 var zip = require('zip');
 
-/*
-var search_results = [];
-curseforge.getMods({ searchFilter: 'sodium' }).then((mods) => {
-  //console.log(mods);
-  search_results = mods;
-});
-*/
-
-// json parse
-
 // Local Information
-// mods list
 const mc_dir = path.join(process.env.APPDATA, '/.minecraft');
 const mods_dir = path.join(mc_dir, '/mods');
 const shaderpacks_dir = path.join(mc_dir, '/shaderpacks');
@@ -97,7 +86,7 @@ app.on('window-all-closed', function () {
 // code. You can also put them in separate files and require them here.
 
 // Mods
-ipcMain.on('ipc-refresh-my-m-list', (event, arg) => {
+ipcMain.on('ipc-refresh-m-list', (event, arg) => {
   const m_list_array = [];
   for (const elm of mods_files) {
     console.log(path.join(mods_dir, elm));
@@ -106,9 +95,6 @@ ipcMain.on('ipc-refresh-my-m-list', (event, arg) => {
     var key,
       files = reader.toObject('utf8');
     const jsonObject = JSON.parse(files['fabric.mod.json'], 'utf8');
-    //console.log(jsonObject.id);
-    //console.log(jsonObject.name);
-    //console.log(jsonObject.version);
     /*
     curseforge.getMod(jsonObject.id).then((latest) => {
       console.log(latest);
@@ -122,28 +108,21 @@ ipcMain.on('ipc-refresh-my-m-list', (event, arg) => {
     });
   }
   console.log(m_list_array);
-  //event.reply('ipc-display-my-m-list', mods_files);
-  event.reply('ipc-display-my-m-list', m_list_array);
+  event.reply('ipc-display-m-list', m_list_array);
 });
 
 // Shaderpacks
-ipcMain.on('ipc-refresh-my-s-list', (event, arg) => {
-  event.reply('ipc-display-my-s-list', shaderpacks_files);
+ipcMain.on('ipc-refresh-s-list', (event, arg) => {
+  event.reply('ipc-display-s-list', shaderpacks_files);
 });
 
 // Resourcepacks
-ipcMain.on('ipc-refresh-my-r-list', (event, arg) => {
-  event.reply('ipc-display-my-r-list', resourcepacks_files);
+ipcMain.on('ipc-refresh-r-list', (event, arg) => {
+  event.reply('ipc-display-r-list', resourcepacks_files);
 });
 
 // Search
-
-ipcMain.on('ipc-search-mods', (event, data) => {
-  const result = curseforge.getMods({ searchFilter: data });
-  event.reply('ipc-display-search-results', result);
-});
-
-ipcMain.handle('ipc-find-mods', async (event, data) => {
+ipcMain.handle('ipc-search-mods', async (event, data) => {
   console.log(data);
   const result = await curseforge.getMods({ searchFilter: data });
   console.log(result);

@@ -10,13 +10,9 @@ text_form.addEventListener('keypress', searc_mods);
 function searc_mods(e) {
   //const data = [];
   if (e.keyCode === 13) {
-    window.api.FindMods(text_form.value).then((result) => {
+    window.api.SearchMods(text_form.value).then((result) => {
       console.log(result);
     });
-
-    /*
-    window.api.SearchMods(text_form.value);
-    */
   }
   return false;
 }
@@ -30,13 +26,6 @@ window.onload = () => {
   window.api.RefreshMyModsList();
   window.api.RefreshMyShaderpacksList();
   window.api.RefreshMyResourcepacksList();
-  //window.api.SearchMods(document.getElementById('search_text').value);
-  //window.api.SearchMods('sodium');
-  /*
-  window.api.FindMods('iris').then((result) => {
-    window.api.DisplaySearchResults(result);
-  });
-*/
 };
 
 window.api.DisplayMyModsList((mods_list) => {
