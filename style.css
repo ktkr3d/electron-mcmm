@@ -29,6 +29,7 @@
   border-radius: 5px 5px 0 0;
   flex: 1;
   font-size: 120% !important;
+  filter: grayscale(100%);
 }
 
 .tab-label:not(:last-of-type) {
@@ -45,6 +46,7 @@
 
 .tab-switch:checked + .tab-label {
   background: DeepSkyBlue;
+  filter: grayscale(0%);
 }
 
 .tab-switch:checked + .tab-label + .tab-content {
