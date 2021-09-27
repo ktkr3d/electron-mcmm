@@ -37,8 +37,12 @@ window.api.DisplayMyModsList((mods_list) => {
       '">' +
       elem.name +
       '</a></td><td>' +
+      elem.description +
+      '</td><td>' +
       elem.version +
-      '</td><td></td><td>Installed</td></tr>';
+      '</td><td>' +
+      elem.mc_version +
+      '</td></tr>';
   }
   replaceHTML('table-m-tbody', my_mods_list_html);
   $('#table-m').trigger('update');
@@ -47,7 +51,7 @@ window.api.DisplayMyModsList((mods_list) => {
 window.api.DisplayMyShaderpacksList((list) => {
   var list_html = '';
   for (const elem of list) {
-    list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
+    list_html += '<tr><td>' + elem + '</td></tr>';
   }
   replaceHTML('table-s-tbody', list_html);
   $('#table-s').trigger('update');
@@ -56,7 +60,7 @@ window.api.DisplayMyShaderpacksList((list) => {
 window.api.DisplayMyResourcepacksList((list) => {
   var list_html = '';
   for (const elem of list) {
-    list_html += '<tr><td>' + elem + '</td><td></td><td></td><td></td></tr>';
+    list_html += '<tr><td>' + elem.name + '</td><td>' + elem.description + '</td></tr>';
   }
   replaceHTML('table-r-tbody', list_html);
   $('#table-r').trigger('update');
@@ -65,8 +69,6 @@ window.api.DisplayMyResourcepacksList((list) => {
 window.api.DisplaySearchResults((list) => {
   var list_html = '';
   for (const elem of list) {
-    const ts = Date.parse(elem.updated);
-    const dt = new Date(ts);
     list_html +=
       '<tr><td><a href="' +
       elem.url +
@@ -75,15 +77,11 @@ window.api.DisplaySearchResults((list) => {
       '</a></td><td>' +
       elem.summary +
       '</td><td class="number">' +
-      new Intl.NumberFormat().format(elem.downloads) +
+      elem.downloads +
       '</td><td>' +
-      dt.getFullYear() +
-      '/' +
-      (dt.getMonth() + 1) +
-      '/' +
-      (dt.getDay() + 1) +
+      elem.updated +
       '</td><td>' +
-      'Install' +
+      elem.minecraft +
       '</td></tr>';
   }
   replaceHTML('table-c-tbody', list_html);

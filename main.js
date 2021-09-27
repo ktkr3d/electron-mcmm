@@ -8,12 +8,15 @@ const zip = require('zip');
 const { homedir } = require('os');
 var mwnd;
 
+function uniq(array) {
+  return Array.from(new Set(array));
+}
+
 // Local Path Information
 const mc_dir = path.join(
   process.platform === 'win32' ? process.env.APPDATA : homedir(),
   '/.minecraft'
 );
-console.log(homedir);
 const m_dir = path.join(mc_dir, '/mods');
 const s_dir = path.join(mc_dir, '/shaderpacks');
 const r_dir = path.join(mc_dir, '/resourcepacks');
@@ -26,7 +29,7 @@ const m_files = fs
   .filter(function (file) {
     return path.extname(file).toLowerCase() === '.jar';
   });
-console.log(m_files);
+//console.log(m_files);
 
 // Create Shaderpacks File List
 const s_files = fs
@@ -36,7 +39,7 @@ const s_files = fs
   .filter(function (file) {
     return path.extname(file).toLowerCase() === '.zip';
   });
-console.log(s_files);
+//console.log(s_files);
 
 // Create Resourcepacks File List
 const r_files = fs
@@ -45,7 +48,7 @@ const r_files = fs
   .filter(function (file) {
     return file;
   });
-console.log(r_files);
+//console.log(r_files);
 
 function createWindow() {
   // Create the browser window.
@@ -100,7 +103,7 @@ app.on('window-all-closed', function () {
 ipcMain.on('ipc-refresh-m-list', (event, arg) => {
   const m_list_array = [];
   for (const elm of m_files) {
-    console.log(path.join(m_dir, elm));
+    //console.log(path.join(m_dir, elm));
     var data = fs.readFileSync(path.join(m_dir, elm)),
       reader = zip.Reader(data);
     var key,
@@ -110,7 +113,7 @@ ipcMain.on('ipc-refresh-m-list', (event, arg) => {
     const jsonObject = JSON.parse(files_in_jar['fabric.mod.json'], 'utf8');
     /*
     curseforge.getMod(jsonObject.id).then((latest) => {
-      console.log(latest);
+      //console.log(latest);
     });
     */
     m_list_array.push({
@@ -118,9 +121,11 @@ ipcMain.on('ipc-refresh-m-list', (event, arg) => {
       url: jsonObject.contact.homepage,
       name: jsonObject.name,
       version: jsonObject.version,
+      description: jsonObject.description,
+      mc_version: jsonObject.depends.minecraft,
     });
   }
-  console.log(m_list_array);
+  //console.log(m_list_array);
   event.reply('ipc-display-m-list', m_list_array);
 });
 
@@ -131,14 +136,54 @@ ipcMain.on('ipc-refresh-s-list', (event, arg) => {
 
 // IPC: Return Resourcepacks List
 ipcMain.on('ipc-refresh-r-list', (event, arg) => {
-  event.reply('ipc-display-r-list', r_files);
+  const r_list = [];
+  for (const elm of r_files) {
+    const abs_path = path.join(r_dir, '/', elm);
+    const stats = fs.statSync(abs_path);
+    if (stats.isFile()) {
+      // ZIP
+      var data = fs.readFileSync(abs_path),
+        reader = zip.Reader(data);
+      var key,
+        files_in_zip = reader.toObject('utf8');
+      const jsonObject = JSON.parse(files_in_zip['pack.mcmeta'], 'utf8');
+      r_list.push({
+        name: elm,
+        description: jsonObject.pack.description,
+      });
+    } else if (stats.isDirectory()) {
+      // Directory
+      const file = path.join(abs_path, '/pack.mcmeta');
+      const jsonObject = JSON.parse(fs.readFileSync(file, 'utf8'));
+      r_list.push({
+        name: elm,
+        description: jsonObject.pack.description,
+      });
+    }
+  }
+  event.reply('ipc-display-r-list', r_list);
 });
 
 // IPC: Return Catalog Search Results and Display
 ipcMain.handle('ipc-search-mods', async (event, data) => {
-  console.log(data);
+  var search_result = [];
   const result = await curseforge.getMods({ searchFilter: data });
-  console.log(result);
-  mwnd.webContents.send('ipc-display-search-results', result);
-  return result;
+  result.forEach((elem) => {
+    const ts = Date.parse(elem.updated);
+    const dt = new Date(ts);
+    var mc_versions = [];
+    elem.latestFiles.forEach((file) => {
+      mc_versions = mc_versions.concat(file.minecraft_versions);
+    });
+    search_result.push({
+      url: elem.url,
+      name: elem.name,
+      summary: elem.summary,
+      downloads: new Intl.NumberFormat().format(elem.downloads),
+      updated: dt.getFullYear() + '/' + (dt.getMonth() + 1) + '/' + (dt.getDay() + 1),
+      minecraft: String(uniq(mc_versions).sort()).replace(/,/g, ', '),
+    });
+  });
+  mwnd.webContents.send('ipc-display-search-results', search_result);
+  return search_result;
 });
