@@ -27,4 +27,9 @@ contextBridge.exposeInMainWorld('api', {
   DisplaySearchResults: (list) => {
     ipcRenderer.on('ipc-display-search-results', (event, arg) => list(arg));
   },
+
+  // Select Folder Dialog
+  SelectDir: () => ipcRenderer.send('select-dir-dialog'),
+  // Open Folder
+  OpenDir: () => ipcRenderer.send('open-dir'),
 });

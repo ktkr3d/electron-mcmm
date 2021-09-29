@@ -4,6 +4,13 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
+document.getElementById('in_s_02').addEventListener('click', () => {
+  window.api.SelectDir();
+});
+
+document.getElementById('in_s_04').addEventListener('click', () => {
+  window.api.OpenDir();
+});
 
 const text_form = document.getElementById('text-01');
 text_form.addEventListener('keypress', searc_mods);

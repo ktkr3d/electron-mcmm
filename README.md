@@ -1,6 +1,6 @@
 # electron-mcmm
 
-Electron Minecraft Mods Manager
+Electron Minecraft Mod Manager
 
 ![screenshot](https://ktkr3d.github.io/images/emcmm_m_list.png)
 

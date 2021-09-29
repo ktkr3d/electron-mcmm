@@ -1,9 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const curseforge = require('mc-curseforge-api');
-const { config } = require('process');
 const zip = require('zip');
 const { homedir } = require('os');
 var mwnd;
@@ -53,7 +52,7 @@ const r_files = fs
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    title: 'Electron Minecraft Mods Manager',
+    title: 'Electron Minecraft Mod Manager',
     width: 800,
     height: 600,
     webPreferences: {
@@ -186,4 +185,26 @@ ipcMain.handle('ipc-search-mods', async (event, data) => {
   });
   mwnd.webContents.send('ipc-display-search-results', search_result);
   return search_result;
+});
+
+ipcMain.on('select-dir-dialog', (event, arg) => {
+  const options = {
+    //title: 'Open a file or folder',
+    //defaultPath: '/path/to/something/',
+    //buttonLabel: 'Do it',
+    /*filters: [
+        { name: 'xml', extensions: ['xml'] }
+      ],*/
+    //properties: ['showHiddenFiles'],
+    properties: ['openDirectory', 'showHiddenFiles'],
+    //message: 'This message will only be shown on macOS'
+  };
+
+  dialog.showOpenDialog(null, options, (filePaths) => {
+    event.sender.send('open-dialog-paths-selected', filePaths);
+  });
+});
+
+ipcMain.on('open-dir', (event, arg) => {
+  shell.showItemInFolder('C:\\');
 });

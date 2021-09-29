@@ -1,7 +1,7 @@
 {
   "name": "electron-mcmm",
   "version": "0.2021.0926",
-  "description": "Electron Minecraft Mods Manager",
+  "description": "Electron Minecraft Mod Manager",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
