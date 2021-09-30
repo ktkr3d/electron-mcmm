@@ -21,32 +21,56 @@ const s_dir = path.join(mc_dir, '/shaderpacks');
 const r_dir = path.join(mc_dir, '/resourcepacks');
 
 // Create Mods File List
-const m_files = fs
-  .readdirSync(m_dir, { withFileTypes: true })
-  .filter((dirent) => dirent.isFile())
-  .map(({ name }) => name)
-  .filter(function (file) {
-    return path.extname(file).toLowerCase() === '.jar';
-  });
+const m_files = [];
+fs.access(m_dir, fs.F_OK, (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+
+  //file exists
+  fs.readdirSync(m_dir, { withFileTypes: true })
+    .filter((dirent) => dirent.isFile())
+    .map(({ name }) => name)
+    .filter(function (file) {
+      if (path.extname(file).toLowerCase() === '.jar') {
+        m_files.push(file);
+      }
+    });
+});
 //console.log(m_files);
 
 // Create Shaderpacks File List
-const s_files = fs
-  .readdirSync(s_dir, { withFileTypes: true })
-  .filter((dirent) => dirent.isFile())
-  .map(({ name }) => name)
-  .filter(function (file) {
-    return path.extname(file).toLowerCase() === '.zip';
-  });
+const s_files = [];
+fs.access(s_dir, fs.F_OK, (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  fs.readdirSync(s_dir, { withFileTypes: true })
+    .filter((dirent) => dirent.isFile())
+    .map(({ name }) => name)
+    .filter(function (file) {
+      if (path.extname(file).toLowerCase() === '.zip') {
+        s_files.push(file);
+      }
+    });
+});
 //console.log(s_files);
 
 // Create Resourcepacks File List
-const r_files = fs
-  .readdirSync(r_dir, { withFileTypes: true })
-  .map(({ name }) => name)
-  .filter(function (file) {
-    return file;
-  });
+const r_files = [];
+fs.access(r_dir, fs.F_OK, (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  fs.readdirSync(r_dir, { withFileTypes: true })
+    .map(({ name }) => name)
+    .filter(function (file) {
+      r_files.push(file);
+    });
+});
 //console.log(r_files);
 
 function createWindow() {
