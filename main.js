@@ -211,24 +211,58 @@ ipcMain.handle('ipc-search-mods', async (event, data) => {
   return search_result;
 });
 
-ipcMain.on('select-dir-dialog', (event, arg) => {
+ipcMain.on('select-mc-dir', (event, arg) => {
   const options = {
-    //title: 'Open a file or folder',
-    //defaultPath: '/path/to/something/',
-    //buttonLabel: 'Do it',
-    /*filters: [
-        { name: 'xml', extensions: ['xml'] }
-      ],*/
-    //properties: ['showHiddenFiles'],
+    defaultPath: mc_dir,
     properties: ['openDirectory', 'showHiddenFiles'],
-    //message: 'This message will only be shown on macOS'
   };
-
   dialog.showOpenDialog(null, options, (filePaths) => {
     event.sender.send('open-dialog-paths-selected', filePaths);
   });
 });
 
-ipcMain.on('open-dir', (event, arg) => {
-  shell.showItemInFolder('C:\\');
+ipcMain.on('select-m-dir', (event, arg) => {
+  const options = {
+    defaultPath: m_dir,
+    properties: ['openDirectory', 'showHiddenFiles'],
+  };
+  dialog.showOpenDialog(null, options, (filePaths) => {
+    event.sender.send('open-dialog-paths-selected', filePaths);
+  });
+});
+
+ipcMain.on('select-s-dir', (event, arg) => {
+  const options = {
+    defaultPath: s_dir,
+    properties: ['openDirectory', 'showHiddenFiles'],
+  };
+  dialog.showOpenDialog(null, options, (filePaths) => {
+    event.sender.send('open-dialog-paths-selected', filePaths);
+  });
+});
+
+ipcMain.on('select-r-dir', (event, arg) => {
+  const options = {
+    defaultPath: r_dir,
+    properties: ['openDirectory', 'showHiddenFiles'],
+  };
+  dialog.showOpenDialog(null, options, (filePaths) => {
+    event.sender.send('open-dialog-paths-selected', filePaths);
+  });
+});
+
+ipcMain.on('open-mc-dir', (event, arg) => {
+  shell.openPath(mc_dir);
+});
+
+ipcMain.on('open-m-dir', (event, arg) => {
+  shell.openPath(m_dir);
+});
+
+ipcMain.on('open-s-dir', (event, arg) => {
+  shell.openPath(s_dir);
+});
+
+ipcMain.on('open-r-dir', (event, arg) => {
+  shell.openPath(r_dir);
 });

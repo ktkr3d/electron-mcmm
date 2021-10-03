@@ -29,7 +29,20 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   // Select Folder Dialog
-  SelectDir: () => ipcRenderer.send('select-dir-dialog'),
+  SelectMCDir: () => ipcRenderer.send('select-mc-dir'),
+  // Select Folder Dialog
+  SelectMDir: () => ipcRenderer.send('select-m-dir'),
+  // Select Folder Dialog
+  SelectSDir: () => ipcRenderer.send('select-s-dir'),
+  // Select Folder Dialog
+  SelectRDir: () => ipcRenderer.send('select-r-dir'),
+
   // Open Folder
-  OpenDir: () => ipcRenderer.send('open-dir'),
+  OpenMCDir: () => ipcRenderer.send('open-mc-dir'),
+  // Open Folder
+  OpenMDir: () => ipcRenderer.send('open-m-dir'),
+  // Open Folder
+  OpenSDir: () => ipcRenderer.send('open-s-dir'),
+  // Open Folder
+  OpenRDir: () => ipcRenderer.send('open-r-dir'),
 });

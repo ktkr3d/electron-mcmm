@@ -5,11 +5,35 @@
 // selectively enable features needed in the rendering
 // process.
 document.getElementById('in_s_02').addEventListener('click', () => {
-  window.api.SelectDir();
+  window.api.SelectMCDir();
 });
 
 document.getElementById('in_s_04').addEventListener('click', () => {
-  window.api.OpenDir();
+  window.api.OpenMCDir();
+});
+
+document.getElementById('in_s_12').addEventListener('click', () => {
+  window.api.SelectMDir();
+});
+
+document.getElementById('in_s_14').addEventListener('click', () => {
+  window.api.OpenMDir();
+});
+
+document.getElementById('in_s_22').addEventListener('click', () => {
+  window.api.SelectSDir();
+});
+
+document.getElementById('in_s_24').addEventListener('click', () => {
+  window.api.OpenSDir();
+});
+
+document.getElementById('in_s_32').addEventListener('click', () => {
+  window.api.SelectRDir();
+});
+
+document.getElementById('in_s_34').addEventListener('click', () => {
+  window.api.OpenRDir();
 });
 
 const text_form = document.getElementById('text-01');
