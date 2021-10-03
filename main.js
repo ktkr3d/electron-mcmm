@@ -5,73 +5,77 @@ const fs = require('fs');
 const curseforge = require('mc-curseforge-api');
 const zip = require('zip');
 const { homedir } = require('os');
-var mwnd;
+
+let mwnd;
 
 function uniq(array) {
   return Array.from(new Set(array));
 }
 
 // Local Path Information
-const mc_dir = path.join(
+const mcDir = path.join(
   process.platform === 'win32' ? process.env.APPDATA : homedir(),
   '/.minecraft'
 );
-const m_dir = path.join(mc_dir, '/mods');
-const s_dir = path.join(mc_dir, '/shaderpacks');
-const r_dir = path.join(mc_dir, '/resourcepacks');
+const mDir = path.join(mcDir, '/mods');
+const sDir = path.join(mcDir, '/shaderpacks');
+const rDir = path.join(mcDir, '/resourcepacks');
 
 // Create Mods File List
-const m_files = [];
-fs.access(m_dir, fs.F_OK, (err) => {
+const mFiles = [];
+fs.access(mDir, fs.F_OK, (err) => {
   if (err) {
-    console.error(err);
+    // console.error(err);
     return;
   }
 
-  //file exists
-  fs.readdirSync(m_dir, { withFileTypes: true })
+  // file exists
+  fs.readdirSync(mDir, { withFileTypes: true })
     .filter((dirent) => dirent.isFile())
     .map(({ name }) => name)
-    .filter(function (file) {
+    .filter((file) => {
       if (path.extname(file).toLowerCase() === '.jar') {
-        m_files.push(file);
+        mFiles.push(file);
       }
+      return mFiles;
     });
 });
-//console.log(m_files);
+// console.log(mFiles);
 
 // Create Shaderpacks File List
-const s_files = [];
-fs.access(s_dir, fs.F_OK, (err) => {
+const sFiles = [];
+fs.access(sDir, fs.F_OK, (err) => {
   if (err) {
-    console.error(err);
+    // console.error(err);
     return;
   }
-  fs.readdirSync(s_dir, { withFileTypes: true })
+  fs.readdirSync(sDir, { withFileTypes: true })
     .filter((dirent) => dirent.isFile())
     .map(({ name }) => name)
-    .filter(function (file) {
+    .filter((file) => {
       if (path.extname(file).toLowerCase() === '.zip') {
-        s_files.push(file);
+        sFiles.push(file);
       }
+      return sFiles;
     });
 });
-//console.log(s_files);
+// console.log(sFiles);
 
 // Create Resourcepacks File List
-const r_files = [];
-fs.access(r_dir, fs.F_OK, (err) => {
+const rFiles = [];
+fs.access(rDir, fs.F_OK, (err) => {
   if (err) {
-    console.error(err);
+    // console.error(err);
     return;
   }
-  fs.readdirSync(r_dir, { withFileTypes: true })
+  fs.readdirSync(rDir, { withFileTypes: true })
     .map(({ name }) => name)
-    .filter(function (file) {
-      r_files.push(file);
+    .filter((file) => {
+      rFiles.push(file);
+      return sFiles;
     });
 });
-//console.log(r_files);
+// console.log(rFiles);
 
 function createWindow() {
   // Create the browser window.
@@ -91,11 +95,12 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
-  mainWindow.webContents.on('new-window', function (e, url) {
+  mainWindow.webContents.on('new-window', (e, url) => {
     e.preventDefault();
-    require('electron').shell.openExternal(url);
+    // require('electron').shell.openExternal(url);
+    shell.openExternal(url);
   });
 }
 
@@ -105,7 +110,7 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  app.on('activate', function () {
+  app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -115,7 +120,7 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
@@ -123,23 +128,20 @@ app.on('window-all-closed', function () {
 // code. You can also put them in separate files and require them here.
 
 // IPC: Return Mods List
-ipcMain.on('ipc-refresh-m-list', (event, arg) => {
-  const m_list_array = [];
-  for (const elm of m_files) {
-    //console.log(path.join(m_dir, elm));
-    var data = fs.readFileSync(path.join(m_dir, elm)),
-      reader = zip.Reader(data);
-    var key,
-      files_in_jar = reader.toObject('utf8');
+ipcMain.on('ipc-refresh-m-list', (event) => {
+  const mListArray = [];
+
+  /*
+  for (const elm of mFiles) {
+    // console.log(path.join(mDir, elm));
+    const data = fs.readFileSync(path.join(mDir, elm));
+    const reader = zip.Reader(data);
+    let key;
+    const filesInJar = reader.toObject('utf8');
 
     // Fabric Mod Information
-    const jsonObject = JSON.parse(files_in_jar['fabric.mod.json'], 'utf8');
-    /*
-    curseforge.getMod(jsonObject.id).then((latest) => {
-      //console.log(latest);
-    });
-    */
-    m_list_array.push({
+    const jsonObject = JSON.parse(filesInJar['fabric.mod.json'], 'utf8');
+    mListArray.push({
       id: jsonObject.id,
       url: jsonObject.contact.homepage,
       name: jsonObject.name,
@@ -148,72 +150,91 @@ ipcMain.on('ipc-refresh-m-list', (event, arg) => {
       mc_version: jsonObject.depends.minecraft,
     });
   }
-  //console.log(m_list_array);
-  event.reply('ipc-display-m-list', m_list_array);
+*/
+  mFiles.forEach((elm) => {
+    // console.log(path.join(mDir, elm));
+    const data = fs.readFileSync(path.join(mDir, elm));
+    const reader = zip.Reader(data);
+    // let key;
+    const filesInJar = reader.toObject('utf8');
+
+    // Fabric Mod Information
+    const jsonObject = JSON.parse(filesInJar['fabric.mod.json'], 'utf8');
+    mListArray.push({
+      id: jsonObject.id,
+      url: jsonObject.contact.homepage,
+      name: jsonObject.name,
+      version: jsonObject.version,
+      description: jsonObject.description,
+      mc_version: jsonObject.depends.minecraft,
+    });
+  });
+  // console.log(mListArray);
+  event.reply('ipc-display-m-list', mListArray);
 });
 
 // IPC: Return Shaderpacks List
-ipcMain.on('ipc-refresh-s-list', (event, arg) => {
-  event.reply('ipc-display-s-list', s_files);
+ipcMain.on('ipc-refresh-s-list', (event) => {
+  event.reply('ipc-display-s-list', sFiles);
 });
 
 // IPC: Return Resourcepacks List
-ipcMain.on('ipc-refresh-r-list', (event, arg) => {
-  const r_list = [];
-  for (const elm of r_files) {
-    const abs_path = path.join(r_dir, '/', elm);
-    const stats = fs.statSync(abs_path);
+ipcMain.on('ipc-refresh-r-list', (event) => {
+  const rList = [];
+  rFiles.forEach((elm) => {
+    const absPath = path.join(rDir, '/', elm);
+    const stats = fs.statSync(absPath);
     if (stats.isFile()) {
       // ZIP
-      var data = fs.readFileSync(abs_path),
-        reader = zip.Reader(data);
-      var key,
-        files_in_zip = reader.toObject('utf8');
-      const jsonObject = JSON.parse(files_in_zip['pack.mcmeta'], 'utf8');
-      r_list.push({
+      const data = fs.readFileSync(absPath);
+      const reader = zip.Reader(data);
+      // let key;
+      const filesInZip = reader.toObject('utf8');
+      const jsonObject = JSON.parse(filesInZip['pack.mcmeta'], 'utf8');
+      rList.push({
         name: elm,
         description: jsonObject.pack.description,
       });
     } else if (stats.isDirectory()) {
       // Directory
-      const file = path.join(abs_path, '/pack.mcmeta');
+      const file = path.join(absPath, '/pack.mcmeta');
       const jsonObject = JSON.parse(fs.readFileSync(file, 'utf8'));
-      r_list.push({
+      rList.push({
         name: elm,
         description: jsonObject.pack.description,
       });
     }
-  }
-  event.reply('ipc-display-r-list', r_list);
+  });
+  event.reply('ipc-display-r-list', rList);
 });
 
 // IPC: Return Catalog Search Results and Display
 ipcMain.handle('ipc-search-mods', async (event, data) => {
-  var search_result = [];
+  const searchResult = [];
   const result = await curseforge.getMods({ searchFilter: data });
   result.forEach((elem) => {
     const ts = Date.parse(elem.updated);
     const dt = new Date(ts);
-    var mc_versions = [];
+    let mcVersions = [];
     elem.latestFiles.forEach((file) => {
-      mc_versions = mc_versions.concat(file.minecraft_versions);
+      mcVersions = mcVersions.concat(file.minecraft_versions);
     });
-    search_result.push({
+    searchResult.push({
       url: elem.url,
       name: elem.name,
       summary: elem.summary,
       downloads: new Intl.NumberFormat().format(elem.downloads),
-      updated: dt.getFullYear() + '/' + (dt.getMonth() + 1) + '/' + (dt.getDay() + 1),
-      minecraft: String(uniq(mc_versions).sort()).replace(/,/g, ', '),
+      updated: `${dt.getFullYear()}/${dt.getMonth() + 1}/${dt.getDay() + 1}`,
+      minecraft: String(uniq(mcVersions).sort()).replace(/,/g, ', '),
     });
   });
-  mwnd.webContents.send('ipc-display-search-results', search_result);
-  return search_result;
+  mwnd.webContents.send('ipc-display-search-results', searchResult);
+  return searchResult;
 });
 
-ipcMain.on('select-mc-dir', (event, arg) => {
+ipcMain.on('select-mc-dir', (event) => {
   const options = {
-    defaultPath: mc_dir,
+    defaultPath: mcDir,
     properties: ['openDirectory', 'showHiddenFiles'],
   };
   dialog.showOpenDialog(null, options, (filePaths) => {
@@ -221,9 +242,9 @@ ipcMain.on('select-mc-dir', (event, arg) => {
   });
 });
 
-ipcMain.on('select-m-dir', (event, arg) => {
+ipcMain.on('select-m-dir', (event) => {
   const options = {
-    defaultPath: m_dir,
+    defaultPath: mDir,
     properties: ['openDirectory', 'showHiddenFiles'],
   };
   dialog.showOpenDialog(null, options, (filePaths) => {
@@ -231,9 +252,9 @@ ipcMain.on('select-m-dir', (event, arg) => {
   });
 });
 
-ipcMain.on('select-s-dir', (event, arg) => {
+ipcMain.on('select-s-dir', (event) => {
   const options = {
-    defaultPath: s_dir,
+    defaultPath: sDir,
     properties: ['openDirectory', 'showHiddenFiles'],
   };
   dialog.showOpenDialog(null, options, (filePaths) => {
@@ -241,9 +262,9 @@ ipcMain.on('select-s-dir', (event, arg) => {
   });
 });
 
-ipcMain.on('select-r-dir', (event, arg) => {
+ipcMain.on('select-r-dir', (event) => {
   const options = {
-    defaultPath: r_dir,
+    defaultPath: rDir,
     properties: ['openDirectory', 'showHiddenFiles'],
   };
   dialog.showOpenDialog(null, options, (filePaths) => {
@@ -251,18 +272,18 @@ ipcMain.on('select-r-dir', (event, arg) => {
   });
 });
 
-ipcMain.on('open-mc-dir', (event, arg) => {
-  shell.openPath(mc_dir);
+ipcMain.on('open-mc-dir', () => {
+  shell.openPath(mcDir);
 });
 
-ipcMain.on('open-m-dir', (event, arg) => {
-  shell.openPath(m_dir);
+ipcMain.on('open-m-dir', () => {
+  shell.openPath(mDir);
 });
 
-ipcMain.on('open-s-dir', (event, arg) => {
-  shell.openPath(s_dir);
+ipcMain.on('open-s-dir', () => {
+  shell.openPath(sDir);
 });
 
-ipcMain.on('open-r-dir', (event, arg) => {
-  shell.openPath(r_dir);
+ipcMain.on('open-r-dir', () => {
+  shell.openPath(rDir);
 });
